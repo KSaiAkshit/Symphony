@@ -1,0 +1,15 @@
+workspace = { members = ["serialib"] }
+[package]
+name = "symphony"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serialib ={ path = "./serialib"}
+eframe = { version = "0.27.2", features = ["persistence"] }
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.115"
+serialport = { version = "4.3.0", features = ["serde"] }
+anyhow = "1.0.82"
