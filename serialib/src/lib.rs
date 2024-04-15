@@ -22,7 +22,7 @@ pub struct SerialDevices {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Device {
     /// Name of device
-    pub name: String,
+    pub path: String,
     /// Communication speed in bits per second
     pub baud_rate: usize,
     /// Number of bits to represent one character of data
@@ -40,8 +40,8 @@ pub struct Device {
 impl Default for SerialDevices {
     fn default() -> Self {
         Self {
-            devices: vec![Device::default()],
-            labels: vec![vec!["".to_string()]],
+            devices: Vec::default(),
+            labels: Vec::default(),
             number_of_plots: vec![1],
         }
     }
@@ -50,7 +50,7 @@ impl Default for SerialDevices {
 impl Default for Device {
     fn default() -> Self {
         Self {
-            name: "".to_string(),
+            path: String::default(),
             baud_rate: 9600,
             data_bits: DataBits::Eight,
             flow_control: FlowControl::None,
@@ -58,6 +58,69 @@ impl Default for Device {
             stop_bits: StopBits::One,
             timeout: Duration::from_millis(10),
         }
+    }
+}
+
+impl Device {
+    pub fn new(
+        name: String,
+        baud_rate: usize,
+        data_bits: DataBits,
+        flow_control: FlowControl,
+        parity: Parity,
+        stop_bits: StopBits,
+        timeout: Duration,
+    ) -> Self {
+        Self {
+            path: name,
+            baud_rate,
+            data_bits,
+            flow_control,
+            parity,
+            stop_bits,
+            timeout,
+        }
+    }
+    /// Set the path to the serial port
+    pub fn path(mut self, path: &str) -> Self {
+        self.path = path.to_string();
+        self
+    }
+
+    /// Set the baud rate in symbols-per-second
+    pub fn baud_rate(mut self, baud_rate: usize) -> Self {
+        self.baud_rate = baud_rate;
+        self
+    }
+
+    /// Set the number of bits used to represent a character sent on the line
+    pub fn data_bits(mut self, data_bits: DataBits) -> Self {
+        self.data_bits = data_bits;
+        self
+    }
+
+    /// Set the type of signalling to use for controlling data transfer
+    pub fn flow_control(mut self, flow_control: FlowControl) -> Self {
+        self.flow_control = flow_control;
+        self
+    }
+
+    /// Set the type of parity to use for error checking
+    pub fn parity(mut self, parity: Parity) -> Self {
+        self.parity = parity;
+        self
+    }
+
+    /// Set the number of bits to use to signal the end of a character
+    pub fn stop_bits(mut self, stop_bits: StopBits) -> Self {
+        self.stop_bits = stop_bits;
+        self
+    }
+
+    /// Set the amount of time to wait to receive data before timing out
+    pub fn timeout(mut self, timeout: Duration) -> Self {
+        self.timeout = timeout;
+        self
     }
 }
 
