@@ -1,7 +1,9 @@
 use serde::{Deserialize, Serialize};
-use serialport::{DataBits, FlowControl, Parity, StopBits};
+use serialport::{DataBits, FlowControl, Parity, SerialPort, StopBits};
 use std::time::Duration;
 use thiserror::Error;
+
+mod test;
 
 #[derive(Error, Debug)]
 pub enum Error {
@@ -121,6 +123,16 @@ impl Device {
     pub fn timeout(mut self, timeout: Duration) -> Self {
         self.timeout = timeout;
         self
+    }
+
+    pub fn open(&self) -> serialport::Result<Box<dyn SerialPort>> {
+        serialport::new(self.path.clone(), self.baud_rate as u32)
+            .timeout(self.timeout)
+            .data_bits(self.data_bits)
+            .parity(self.parity)
+            .flow_control(self.flow_control)
+            .stop_bits(self.stop_bits)
+            .open()
     }
 }
 
